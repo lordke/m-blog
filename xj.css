@@ -1,0 +1,78 @@
+* {
+	margin:0;
+	padding:0;
+}
+body {
+	font-family:FangSong_GB2312;
+	background-image: url(1.jpg);
+}
+
+
+header{
+	
+	height:150px;
+	border:3px dotted #99CCFF;;
+}
+
+header h1{
+	color:#336699;
+	padding:30px ;
+	text-align:center ;
+	font-size:60px;
+}
+
+select {
+	font-size: 20px;
+	height: 40px;
+	weight:50px;
+}
+
+.select {
+	color:white;
+	font-size: 20px;
+	font-weight: bold;
+	background-color: #336699;
+	overflow: hidden;
+	height: 220px;
+}
+.submit
+{
+	float: left;
+	margin-top:50px;
+}
+.select label{
+	float: left;
+	padding-left:50px; 
+	margin-top:50px;
+
+}
+.select label:first-child{
+    margin-left: 450px;
+}
+
+.class{
+	clear:right;
+	margin-right:500px;
+}
+.id{
+	margin-left:500px;	
+	clear :right;
+}
+.id input{
+	height:35px;
+
+}
+
+.content{
+	height:500px;
+	
+}
+.submit {
+	margin-left:20px;
+	text-align: center;
+	height: 35px;
+	line-height: 10px;
+
+}
+
+

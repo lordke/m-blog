@@ -4,6 +4,7 @@ var User  = require('../models/user.js');
 var Post = require('../models/post.js');
 var  multer = require('multer');
 var Comment = require("../models/comment.js");
+var mongodb = require('../models/db');
 
 /* GET home page.
 router.get('/', function(req, res, next) {
@@ -37,7 +38,81 @@ function checkNotLogin(req,res,next) {
     }
     next();
 }
+
 module.exports = function (app) {
+    app.get('/xj',function (req,res) {
+        res.render('xj');
+    });
+
+    app.get('/data',function (req,res) {
+        var collage = req.query.collage
+        var classes = req.query.classes
+        var id = parseInt(req.query.id)
+
+
+            mongodb.open(function (err, db) {
+                if (err) {
+                    console.log('数据库打开失败1')
+                }
+                db.collection('xj', function (err, collection) {
+                    if (err) {
+                        mongodb.close();
+                        console.log('数据库打开失败2')
+                        console.log(err)
+                    }
+                    if(id){
+                        query={'id':id}
+                    }
+                    else if(classes){
+                        query={'班级':classes}
+                    }
+                    else{
+                        query={'专业':collage}
+                    }
+                    collection.find(query).toArray(function (err, docs) {
+                        mongodb.close();
+                        if (err) {
+                            console.log('to arry error')
+                        }
+                        var i=0
+                        var str=''
+                        while(i<docs.length) {
+
+                            str = str +" \<student>" +
+                                "\<id>" + docs[i]['id'] + "\</id>" +
+                                "\<姓名>" + docs[i]["姓名"] + "\</姓名>" +
+                                "\<性别>" + docs[i]['性别'] + "\</性别>" +
+                                "\<班级>" + docs[i]['班级'] + "\</班级>" +
+                                "\<专业>" + docs[i]['专业'] + "\</专业>" +
+                                "\</student>"
+                            
+                            i++
+                        }
+                        str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><school>" + str + "</school>"
+                        res.writeHead(200, {"Content-Type": "application/xml"});
+                        res.end(str);
+
+                    })
+
+                })
+            })
+
+
+
+
+
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     app.get('/', function (req, res) {
         //判断是否是第一页，并把请求的页数转换成 number 类型
         var page = parseInt(req.query.p) || 1;
@@ -303,6 +378,22 @@ module.exports = function (app) {
     });
     
   app.use(express.static('public'));
+
+    app.get('/archive', function (req, res) {
+        Post.getArchive(function (err, posts) {
+            if (err) {
+                req.flash('error', err);
+                return res.redirect('/');
+            }
+            res.render('archive', {
+                title: '存档',
+                posts: posts,
+                user: req.session.user,
+                success: req.flash('success').toString(),
+                error: req.flash('error').toString()
+            });
+        });
+    });
 
   };
 
